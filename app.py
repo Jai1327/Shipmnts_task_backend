@@ -45,7 +45,7 @@ def register():
             return render_template('home.html')
 
         else:
-            user_input = {'uname':uname,'email':email, 'Password':pass1}
+            user_input = {'uname':uname,'email':email, 'password':pass1}
             user.insert_one(user_input)
             # idhar khuch logged in render karvana hai
 
@@ -55,9 +55,21 @@ def register():
 def login():
     if request.method == "POST":
         email = request.form.get('email')
-        pass1 = request.form.get('pass')
-        print(email)
-        print(pass1)
+        pass1 = request.form.get('pass1')
+        
+        email_found = user.find_one({"email":email})
+
+        if email_found:
+            email_val = email_found['email']
+            pass_val = email_found['password']
+            if pass_val == pass1:
+                print("Logged In Successfully")
+            else:
+                print("Invalid Password")
+        else:
+            print("email not found")
+    
+    return render_template('home.html')
 
 @app.route('/myQuestions')
 def myQuestions():
